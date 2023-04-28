@@ -1,0 +1,14 @@
+
+
+# Python
+*.pyc
+__pycache__/
+*.py[cod]
+*$py.class
+
+# env
+.env
+*env
+*./env
+*./env/bin
+*.env
