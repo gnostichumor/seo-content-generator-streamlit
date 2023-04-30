@@ -49,27 +49,24 @@ def generate_article():
 
 
 if 'api_key' not in st.session_state:
-    api_form = st.form(key='API Key')
     st.markdown('## Enter Your OpenAI API Key')
     st.markdown('You can find your API key at https://beta.openai.com/account/api-keys')
     st.markdown('If you do not have an OpenAI account, you can sign up at https://beta.openai.com')
     st.markdown('This App is hosted on Streamlit. API keys are stored in the session state and will be destroyed when you closer your browser.')
     st.markdown('If you do not feel comfortable entering your API key, you can clone this repo and run the app locally.')
     st.markdown('Repo can be found at github.com/gnostichumor/seo-content-streamlit')
-    st.session_state.api_key = api_form.text_input("API Key", value="")
+    api_key = get_api_key()
+    st.session_state.api_key = api_key
     OPENAI_API_KEY = st.session_state.api_key
-    api_submitted = api_form.form_submit_button(label="Submit")
-
-submit = False
-
-if api_submitted:
+else:
+     # If the API key is already stored in the session state, use it
+    api_key = st.session_state['api_key']
     generate_form = st.form(key='Generate Article')
     keyword = generate_form.text_input("Keyword", value="")
     submit = generate_form.form_submit_button(label="Generate Article")
-
-st.markdown("## Generated Article")
-if submit:
-    article = generate_article()
-    st.write(article)
+    st.markdown("## Generated Article")
+    if submit:
+        article = generate_article()
+        st.write(article)
 
 
