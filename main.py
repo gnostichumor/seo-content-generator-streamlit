@@ -4,10 +4,10 @@ import streamlit as st
 from langchain import PromptTemplate, LLMChain
 from langchain.llms import OpenAI
 
-load_dotenv()
+# load_dotenv()
 
 # Load API key from .env file
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+# OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 template = """
 Write a 100 percent unique, creative, and human-like style article of a minimum of 1500 words using # headings # and # sub-headings #. 
@@ -34,6 +34,10 @@ with st.sidebar:
 
 st.markdown("# SEO Content Generator")
 
+def get_api_key():
+    input_api_key = st.text_input("API Key", value="")
+    return input_api_key
+
 def get_text():
     input_text = st.text_input("Keyword", value="")
 
@@ -44,9 +48,24 @@ def generate_article():
     return response
 
 
-form = st.form(key='Generate Article')
-keyword = form.text_input("Keyword", value="")
-submit = form.form_submit_button(label="Generate Article")
+if 'api_key' not in st.session_state:
+    api_form = st.form(key='API Key')
+    st.markdown('## Enter Your OpenAI API Key')
+    st.markdown('You can find your API key at https://beta.openai.com/account/api-keys')
+    st.markdown('If you do not have an OpenAI account, you can sign up at https://beta.openai.com')
+    st.markdown('This App is hosted on Streamlit. API keys are stored in the session state and will be destroyed when you closer your browser.')
+    st.markdown('If you do not feel comfortable entering your API key, you can clone this repo and run the app locally.')
+    st.markdown('Repo can be found at github.com/gnostichumor/seo-content-streamlit')
+    st.session_state.api_key = api_form.text_input("API Key", value="")
+    OPENAI_API_KEY = st.session_state.api_key
+    api_submitted = api_form.form_submit_button(label="Submit")
+
+submit = False
+
+if api_submitted:
+    generate_form = st.form(key='Generate Article')
+    keyword = generate_form.text_input("Keyword", value="")
+    submit = generate_form.form_submit_button(label="Generate Article")
 
 st.markdown("## Generated Article")
 if submit:
